@@ -1,7 +1,52 @@
 #!/bin/bash
 
-INPUT="logo.svg"
 OUTDIR="icons"
+
+# Función para encontrar el archivo de logo
+find_logo() {
+    # Si se pasa un archivo como argumento, usarlo
+    if [ -n "$1" ]; then
+        if [ -f "$1" ]; then
+            echo "$1"
+            return 0
+        else
+            echo "Error: El archivo '$1' no existe." >&2
+            return 1
+        fi
+    fi
+
+    # Buscar automáticamente en orden de preferencia: svg, png, jpg, jpeg
+    for ext in svg png jpg jpeg; do
+        if [ -f "logo.$ext" ]; then
+            echo "logo.$ext"
+            return 0
+        fi
+    done
+
+    echo "Error: No se encontró ningún archivo logo.{svg,png,jpg,jpeg}" >&2
+    return 1
+}
+
+# Validar extensión del archivo
+validate_extension() {
+    local file="$1"
+    local ext="${file##*.}"
+    ext=$(echo "$ext" | tr '[:upper:]' '[:lower:]')
+
+    case "$ext" in
+        svg|png|jpg|jpeg)
+            return 0
+            ;;
+        *)
+            echo "Error: Extensión '$ext' no soportada. Use svg, png, jpg o jpeg." >&2
+            return 1
+            ;;
+    esac
+}
+
+# Obtener archivo de entrada
+INPUT=$(find_logo "$1") || exit 1
+validate_extension "$INPUT" || exit 1
 
 mkdir -p $OUTDIR
 
