@@ -1,12 +1,12 @@
-# SVG to Icons Generator
+# SVG/PNG to Icons Generator
 
-Script para generar todos los iconos necesarios para tu web/PWA a partir de un solo archivo SVG.
+Script para generar todos los iconos necesarios para tu web/PWA a partir de un logo (SVG, PNG, JPG o JPEG).
 
 ## Iconos generados
 
 | Archivo | Tamano | Uso |
 |---------|--------|-----|
-| `favicon.ico` | multi | Favicon clasico (16, 32, 48) |
+| `favicon.ico` | 16/32/48 | Favicon clasico multi-resolucion |
 | `favicon-16x16.png` | 16x16 | Favicon navegador |
 | `favicon-32x32.png` | 32x32 | Favicon navegador |
 | `favicon-48x48.png` | 48x48 | Favicon navegador |
@@ -22,9 +22,13 @@ Script para generar todos los iconos necesarios para tu web/PWA a partir de un s
 | `apple-touch-icon-152x152.png` | 152x152 | iPad Retina iOS 7+ |
 | `apple-touch-icon-180x180.png` | 180x180 | iPhone 6 Plus |
 | `android-chrome-192x192.png` | 192x192 | Android/PWA |
+| `android-chrome-384x384.png` | 384x384 | Android/PWA |
 | `android-chrome-512x512.png` | 512x512 | Android/PWA splash |
+| `maskable-icon-192x192.png` | 192x192 | PWA maskable (safe zone 80%) |
+| `maskable-icon-512x512.png` | 512x512 | PWA maskable (safe zone 80%) |
 | `mstile-150x150.png` | 150x150 | Windows tiles |
-| `browserconfig.xml` | - | Config Microsoft |
+| `browserconfig.xml` | - | Config Microsoft (auto-generado) |
+| `manifest.json` | - | Web App Manifest PWA (auto-generado) |
 
 ## Requisitos
 
@@ -36,34 +40,40 @@ Script para generar todos los iconos necesarios para tu web/PWA a partir de un s
 npm install -g sharp-cli png-to-ico
 ```
 
+## Configuracion
+
+Edita las variables al inicio de cada script antes de ejecutar:
+
+```
+APP_NAME      = Nombre completo de la app
+APP_SHORT_NAME = Nombre corto (max ~12 caracteres)
+THEME_COLOR   = Color del navegador/barra de estado (#ffffff)
+BG_COLOR      = Color de fondo del splash screen (#ffffff)
+```
+
 ## Estructura del proyecto
 
 ```
 proyecto/
-├── logo.svg                 # Tu logo en formato SVG
+├── logo.png                 # Tu logo (svg, png, jpg o jpeg)
 ├── generate-icons.sh        # Script para Linux/Mac
 ├── generate-icons.bat       # Script para Windows
 ├── README.md
-└── icons/                   # Carpeta de salida
+└── icons/                   # Carpeta de salida (auto-generada)
     ├── favicon.ico
     ├── favicon-16x16.png
     ├── favicon-32x32.png
     ├── favicon-48x48.png
     ├── apple-touch-icon.png
-    ├── apple-touch-icon-57x57.png
-    ├── apple-touch-icon-60x60.png
-    ├── apple-touch-icon-72x72.png
-    ├── apple-touch-icon-76x76.png
-    ├── apple-touch-icon-96x96.png
-    ├── apple-touch-icon-114x114.png
-    ├── apple-touch-icon-120x120.png
-    ├── apple-touch-icon-144x144.png
-    ├── apple-touch-icon-152x152.png
-    ├── apple-touch-icon-180x180.png
+    ├── apple-touch-icon-*.png
     ├── android-chrome-192x192.png
+    ├── android-chrome-384x384.png
     ├── android-chrome-512x512.png
+    ├── maskable-icon-192x192.png
+    ├── maskable-icon-512x512.png
     ├── mstile-150x150.png
-    └── browserconfig.xml
+    ├── browserconfig.xml
+    └── manifest.json
 ```
 
 ## Uso
@@ -74,14 +84,21 @@ proyecto/
 # Dar permisos (solo la primera vez)
 chmod +x generate-icons.sh
 
-# Ejecutar
+# Detecta logo.{svg,png,jpg,jpeg} automaticamente
 ./generate-icons.sh
+
+# O especifica el archivo
+./generate-icons.sh mi-logo.png
 ```
 
 ### Windows
 
 ```cmd
+# Detecta logo.{svg,png,jpg,jpeg} automaticamente
 generate-icons.bat
+
+# O especifica el archivo
+generate-icons.bat mi-logo.png
 ```
 
 ## Integracion en HTML
@@ -93,23 +110,18 @@ Agrega estas lineas en el `<head>` de tu HTML:
 <link rel="icon" href="/icons/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48x48.png">
 
 <!-- Apple Touch Icons -->
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-touch-icon-57x57.png">
-<link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-touch-icon-60x60.png">
-<link rel="apple-touch-icon" sizes="72x72" href="/icons/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" sizes="96x96" href="/icons/apple-touch-icon-96x96.png">
-<link rel="apple-touch-icon" sizes="114x114" href="/icons/apple-touch-icon-114x114.png">
 <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" sizes="144x144" href="/icons/apple-touch-icon-144x144.png">
 <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon-152x152.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon-180x180.png">
 
-<!-- Android/PWA -->
-<link rel="icon" type="image/png" sizes="192x192" href="/icons/android-chrome-192x192.png">
+<!-- PWA Manifest -->
+<link rel="manifest" href="/icons/manifest.json">
+
+<!-- Android/PWA theme -->
+<meta name="theme-color" content="#ffffff">
 
 <!-- Microsoft -->
 <meta name="msapplication-TileImage" content="/icons/mstile-150x150.png">
@@ -117,30 +129,30 @@ Agrega estas lineas en el `<head>` de tu HTML:
 <meta name="msapplication-config" content="/icons/browserconfig.xml">
 ```
 
-## Manifest para PWA
+## manifest.json generado
 
-Si usas PWA, agrega esto a tu `manifest.json`:
+El script genera automaticamente un `manifest.json` completo con iconos `any` y `maskable`:
 
 ```json
 {
+  "name": "Mi App",
+  "short_name": "App",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
   "icons": [
-    {
-      "src": "/icons/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/android-chrome-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    { "src": "/icons/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/android-chrome-384x384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/maskable-icon-192x192.png",  "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/maskable-icon-512x512.png",  "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
 ```
 
-## Personalizacion
-
-Puedes modificar los scripts para agregar mas tamanos o cambiar el color del tile en `browserconfig.xml`.
+> Los iconos **maskable** tienen un padding del 10% en cada lado para respetar el "safe zone"
+> de launchers adaptativos en Android.
 
 ## Licencia
 
